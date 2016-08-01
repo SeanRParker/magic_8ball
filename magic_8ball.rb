@@ -1,30 +1,30 @@
 # Array of stored responses
 @responses = [
   "You would ask that wouldn't you?",
-	"Probably",
-	"Never.",
-	"OK but just this one time.",
-	"Fine... Absolutely!",
-	"Hahaha. No.",
-	"Ummm, no.",
-	"Ask again later (and not just 2 seconds from now you jerk).",
-	"Error. Bad user. Have someone else ask the question.",
-	"If you have to ask, you already know the answer.",
-	"I can't believe you'd ask that!",
-	"Don't you have some work to do?",
-	"Outlook not good",
-	"Absolutely!",
-	"Why do you care?",
-	"Bite me.",
-	"Survey says no",
-	"You do realize you're asking a machine right? How did things get this low?",
-	"Ummmm. Sure. Why not?",
-	"You'll never know unless you try.",
-	"Never.",
-	"OK. Yeah.",
-	"What do you want me to say? Ummm.... yes?",
-	"Of course, but who isn't?",
-	"Absotively Posilutely",
+  "Probably",
+  "Never.",
+  "OK but just this one time.",
+  "Fine... Absolutely!",
+  "Hahaha. No.",
+  "Ummm, no.",
+  "Ask again later (and not just 2 seconds from now you jerk).",
+  "Error. Bad user. Have someone else ask the question.",
+  "If you have to ask, you already know the answer.",
+  "I can't believe you'd ask that!",
+  "Don't you have some work to do?",
+  "Outlook not good",
+  "Absolutely!",
+  "Why do you care?",
+  "Bite me.",
+  "Survey says no",
+  "You do realize you're asking a machine right? How did things get this low?",
+  "Ummmm. Sure. Why not?",
+  "You'll never know unless you try.",
+  "Never.",
+  "OK. Yeah.",
+  "What do you want me to say? Ummm.... yes?",
+  "Of course, but who isn't?",
+  "Absotively Posilutely",
   "You win. Sure."
 ]
 
@@ -33,7 +33,8 @@ def easter_eggs
   while true
     puts "Welcome to the secret menu!!"
     puts "1) Add a new response"
-    puts "2) See available responses"
+    puts "2) Reset response array"
+    puts "3) See available responses"
     puts "3) Return to main menu"
     easter_input = gets.chomp
     case
@@ -42,6 +43,8 @@ def easter_eggs
       @responses << "#{new_answer}"
       easter_eggs
     when easter_input == "2"
+
+    when easter_input == "3"
       puts @responses.join(" \n")
       easter_eggs
     when easter_input == "3"
@@ -66,9 +69,14 @@ def welcome_message
   puts "Fine. I didn't want to talk anyway!" if @question == "quit" || @question == "QUIT"
   exit(0) if @question == "quit" || @question == "QUIT"
   easter_eggs if @question == "is this the real life?"
+  # Add an answer to the array
+  puts "add response:" if @question == "add_answers"
+  answer_to_add = gets if @question == "add_answers"
+  @responses.insert(@responses.length, answer_to_add ) if @question == "add_answers"
   # Reset responses array if user types reset_answers
+  @responses if @question == "reset_answers"
   # print responses if user types print_answers using .join
-  puts @responses.join("-") if @question == "print_answers"
+  puts @responses.join("\n") if @question == "print_answers"
 end
 
 
@@ -77,19 +85,21 @@ welcome_message
 
 
 def output
-  # Randomizes response and stores it in a value
-  answer = @responses.sample
-  # Returns value to user
-  puts """
-  The answer to '#{@question}' is... \n#{answer}
-  """
+  if answer = "print_answers" || "reset_answers" || "add_answers"
+    @ask_again
+  else
+    # Randomizes response and stores it in a value
+    answer = @responses.sample
+    # Returns value to user
+    puts """
+    The answer to '#{@question}' is... \n#{answer}
+    """
+  end
 end
 
 output
 
 # Asks user if they'd like to ask another question (y/n)
-
-
 # if no, quit. If yes, return to beginning and start over
 def ask_again
   while true
