@@ -36,31 +36,67 @@ def easter_eggs
     puts "1) Add a new response"
     puts "2) Reset response array"
     puts "3) See available responses"
-    puts "3) Return to main menu"
+    puts "4) Return to main menu"
     easter_input = gets.chomp
     case
-    when easter_input == "1"
-      new_answer = gets.strip
-      @responses << "#{new_answer}"
-      easter_eggs
-    when easter_input == "2"
-
-    when easter_input == "3"
-      puts @responses.join(" \n")
-      easter_eggs
-    when easter_input == "3"
-      welcome_message
-      break if easter_input == "3"
+      when easter_input == "1"
+        puts "add response:"
+        new_answer = gets.strip
+        @responses << "#{new_answer}"
+        easter_eggs
+      when easter_input == "2"
+        @responses.clear
+        @responses = @responses_array.clone
+        easter_eggs
+      when easter_input == "3"
+        puts @responses.join("\n")
+        easter_eggs
+      when easter_input == "4"
+        welcome_message
+      break if easter_input == "4"
     end
   end
-
-
 end
+
+@responses = @responses_array.clone
 
 # Prompt user to ask a question or type quit to exit.
 puts "Welcome to Magic 8 Ball"
 
-@responses = @responses_array.clone
+
+# secret commands
+
+def secret_commands
+  # Add an answer to the array
+  if @question == "add_answers"
+    puts "add response:"
+    answer_to_add = gets.chomp
+    @responses.insert(@responses.length, answer_to_add)
+    # Reset responses array if user types reset_answers
+  elsif @question == "reset_answers"
+    @responses.clear
+    @responses = @responses_array.clone
+    # print responses if user types print_answers using .join
+  elsif @question == "print_answers"
+    puts @responses.join("\n")
+  else
+    ask_again
+  end
+end
+
+def output
+  if @question == "print_answers" || @question == "reset_answers" || @question == "add_answers"
+    secret_commands
+  else
+    # Randomizes response and stores it in a value
+    answer = @responses.sample
+    # binding.pry
+    # Returns value to user
+    puts """
+    The answer to '#{@question}' is... #{answer}
+    """
+  end
+end
 
 def welcome_message
   puts """
@@ -69,40 +105,19 @@ def welcome_message
   or type 'quit' to leave. \n
   """
   @question = gets.chomp
-  puts "Fine. I didn't want to talk anyway!" if @question == "quit" || @question == "QUIT"
-  exit(0) if @question == "quit" || @question == "QUIT"
-  easter_eggs if @question == "is this the real life?"
-  # Add an answer to the array
-  puts "add response:" if @question == "add_answers"
-  answer_to_add = gets.chomp if @question == "add_answers"
-  @responses.insert(@responses.length, answer_to_add ) if @question == "add_answers"
-  # Reset responses array if user types reset_answers
-  @responses.clear if @question == "reset_answers"
-  @responses = @responses_array.clone if @question == "reset_answers"
-binding.pry
-  # print responses if user types print_answers using .join
-  puts @responses.join("\n") if @question == "print_answers"
-end
+  # binding.pry
 
-
-welcome_message
-
-
-
-def output
-  if answer = "print_answers" || "reset_answers" || "add_answers"
-    @ask_again
+  if @question == "quit" || @question == "QUIT" || @question == "Q" || @question == "q"
+    puts "Fine. I didn't want to talk anyway!"
+    exit(0)
+  elsif @question == "is this the real life?"
+    easter_eggs
+  elsif @question == "add_answers" || @question == "reset_answers" || @question == "print_answers"
+    secret_commands
   else
-    # Randomizes response and stores it in a value
-    answer = @responses.sample
-    # Returns value to user
-    puts """
-    The answer to '#{@question}' is... \n#{answer}
-    """
+    output
   end
 end
-
-output
 
 # Asks user if they'd like to ask another question (y/n)
 # if no, quit. If yes, return to beginning and start over
@@ -113,9 +128,9 @@ def ask_again
     puts "Thanks for using Magic 8 ball." if again == "n" || again == "no" || again == "NO" || again == "No"
     exit (0) if again == "n" || again == "no" || again == "NO" || again == "No"
     welcome_message
-    output
     ask_again
   end
 end
 
+welcome_message
 ask_again
