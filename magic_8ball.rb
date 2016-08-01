@@ -1,5 +1,6 @@
+require "pry"
 # Array of stored responses
-@responses = [
+@responses_array = [
   "You would ask that wouldn't you?",
   "Probably",
   "Never.",
@@ -59,6 +60,8 @@ end
 # Prompt user to ask a question or type quit to exit.
 puts "Welcome to Magic 8 Ball"
 
+@responses = @responses_array.clone
+
 def welcome_message
   puts """
   What would you like to know? \n
@@ -71,10 +74,12 @@ def welcome_message
   easter_eggs if @question == "is this the real life?"
   # Add an answer to the array
   puts "add response:" if @question == "add_answers"
-  answer_to_add = gets if @question == "add_answers"
+  answer_to_add = gets.chomp if @question == "add_answers"
   @responses.insert(@responses.length, answer_to_add ) if @question == "add_answers"
   # Reset responses array if user types reset_answers
-  @responses if @question == "reset_answers"
+  @responses.clear if @question == "reset_answers"
+  @responses = @responses_array.clone if @question == "reset_answers"
+binding.pry
   # print responses if user types print_answers using .join
   puts @responses.join("\n") if @question == "print_answers"
 end
